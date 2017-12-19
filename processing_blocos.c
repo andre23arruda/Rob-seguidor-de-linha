@@ -12,15 +12,13 @@ int  rect4Color = color(0);
 int  rect5Color = color(0);
 int  rect6Color = color(0);
 
-
-
 int rectSize = 90;     // tamanho do quadrado
 color baseColor;
 color rectHighlight;
 color currentColor;
 boolean rectOver = false; // comeca como nao pressionado
 
-int cont = -1;
+int cont = -1; // iniciando variavel como -1 para dar certinho na funcao mousepress
 
 void setup() {
   
@@ -46,9 +44,11 @@ void setup() {
   
   rect5X = 710;
   rect5Y = height/2-rectSize/2;  
+  
 }
 
 void draw() {
+  
   background(currentColor);
   stroke(255);
   fill(rect1Color);
@@ -67,6 +67,7 @@ void draw() {
 }
 
 void mousePressed() { // verificar se o mouse foi pressionado 
+  
   cont++;
   if (cont%6 == 0)
     rect1Color = rect1Color + color(50);
@@ -80,4 +81,5 @@ void mousePressed() { // verificar se o mouse foi pressionado
     rect5Color = rect5Color + color(50);
   else if (cont%6 == 5)
     rect6Color = rect6Color + color(50);
+  
 }
