@@ -1,26 +1,27 @@
-import processing.serial.*;
+import processing.serial.*; // importando serial
 
-Serial myPort;  // The serial port:
+Serial myPort;  // porta serial
 
-int i;
-char z;
+int i; // variavel auxiliar para loop de lei
+char z; // variavel auxiliar que recebe char
 
-void setup() {
-  // List all the available serial ports:
-  printArray(Serial.list());
-  // O//pen the port you are using at the rate you want:
-  myPort = new Serial(this, Serial.list()[4], 9600);
-
+void setup() 
+{
+  printArray(Serial.list()); // printando todas as portas disponiveis
+  myPort = new Serial(this, Serial.list()[4], 9600); // acessando porta serial do arduino
 }
 
-void draw() {
-  while (myPort.available() > 0) {
-    String x = "";
-    for (i = 0; i < 4; i++) {
-      z = myPort.readChar();
-      if (z == '0')
+void draw() 
+{
+  while (myPort.available() > 0) 
+  {
+    String x = ""; // iniciando string sem nada
+    for (i = 0; i < 6; i++) // loop para percorrer a leitura de todos os sensores 
+    {
+      z = myPort.readChar(); // lendo char enviado pelo arduino
+      if (z == '0') // aqui eh um teste porco para ver se da certo a comparaçao
         print("huehue");
-      x += z;
+      x += z; // montando string
     }
     println(x);
   }
