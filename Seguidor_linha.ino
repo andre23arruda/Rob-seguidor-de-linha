@@ -8,19 +8,13 @@
 float error = 0, P = 0, I = 0, D = 0, PID_value = 0; // Iniciando o PID
 float previous_error = 0, previous_I = 0;
 
-int sensor[6] = {0, 0, 0, 0, 0,0}; // Leitura "digital" dos sensores
+int sensor[6] = {0, 0, 0, 0, 0,0}; // Leitura digital dos sensores
 
-int past_sensor5=0; // variavel auxiliar para contar faixa direita
-int faixas=0; // contador de faixas direita
-int contador=0; // variavel auxiliar para condição de parada
-unsigned long tempo_atual=0; // Tempo para calibracao e parada
-unsigned long tempo_final=0; // Tempo para calibracao e parada
-
-void read_sensor_values(void); // função de leitura dos sensores
-void calculate_pid(void); // função para calcular o PID
-void motor_control(void); // função para aplicar o PID nos motores
-void calcular_media(void); // função para calcular a leitura media dos sensores
-void conta_faixas(void); // função para contar faixas da direita
+int past_sensor5 = 0; // variavel auxiliar para contar faixa direita
+int faixas = 0; // contador de faixas direita
+int contador = 0; // variavel auxiliar para condição de parada
+unsigned long tempo_atual = 0; // Tempo para calibracao e parada
+unsigned long tempo_final = 0; // Tempo para calibracao e parada
 
 void setup()
 {
@@ -37,18 +31,9 @@ void setup()
   Serial.begin(9600); //Enable Serial Communications
 }
 
-void loop() // Todas as funções rodam dentro do loop
-{
-  tempo_atual=millis();
-  calcular_media();
-  read_sensor_values();
-  calculate_pid();
-  conta_faixas();
-  motor_control();
-  Serial.println(tempo_atual-tempo_final);
-}
+// ======================== FUNÇÕES =======================
 
-void calcular_media()
+void read_sensor_values(); // função de leitura dos sensores
 {
   sensor[0] = digitalRead(A5);
   sensor[1] = digitalRead(A4);
@@ -145,4 +130,15 @@ void conta_faixas() // funcao para contar faixas da direita
   }
   past_sensor5=sensor[5];
   Serial.println(faixas);
+}
+
+// ========================================= LOOP ==========================================
+
+void loop() // Todas as funções rodam dentro do loop
+{
+  tempo_atual=millis();
+  read_sensor_values();
+  calculate_pid();
+  conta_faixas();
+  motor_control();
 }
