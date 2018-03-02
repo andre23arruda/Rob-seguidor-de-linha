@@ -11,14 +11,14 @@ int media[6] = {0, 0, 0, 0, 0,0};
 int sensor[6] = {0, 0, 0, 0, 0,0};
 int alto[6] = {0, 0, 0, 0, 0,0};
 int baixo[6] = {1000, 1000, 1000, 1000, 1000,1000};
-int past_sensor5 = 0;
-int faixas = 0;
-int contador = 0;
+int past_sensor5 = 0; // leitura do sensor da faixa direita
+int faixas = 0; // contador de faixas direita
+int aux = 0; // variavel auxiliar para a condição de parada
 unsigned long tempo_atual = 0, tempo_final = 0;
 
-void read_sensor_values(void);
-void calculate_pid(void);
-void motor_control(void);
+void sensores(void);
+void calcula_pid(void);
+void controle_motor(void);
 void calcular_media(void);
 void conta_faixas(void);
 
@@ -45,7 +45,7 @@ void loop(){
   controle_motor();
 }
 
-void calcular_media(){
+void calcular_media(){ // função que calcula a media dos valores de cada sensor
 // Lendo sensores
   a[0] = analogRead(A5);
   a[1] = analogRead(A4);
@@ -92,7 +92,7 @@ void calcular_media(){
     media[5] = (alto[5]+baixo[5])/2;
 }
 
-void sensores(){
+void sensores(){ // função que "transforma" a leitura analogica em digital
     sensor[0] = (a[0]<media[0])? 1 : 0;
     sensor[1] = (a[1]<media[1])? 1 : 0;
     sensor[2] = (a[2]<media[2])? 1 : 0;
@@ -137,7 +137,7 @@ Serial.println(sensor[5]);*/
   }
 }
 
-void calcula_pid(){
+void calcula_pid(){ // função para calcular o PID
   P = erro;
   I = I + p_I;
   D = erro - p_erro;
@@ -148,7 +148,7 @@ void calcula_pid(){
   p_erro = erro;
 }
 
-void controle_motor(){
+void controle_motor(){ // função de controle de velocidade dos motores
   // Calculando a velocidade de acordo com o PID
   int motor_esquerdo = velocidade_inicial - PID;
   int motor_direito = velocidade_inicial + PID;
@@ -158,21 +158,25 @@ void controle_motor(){
   motor_direito = constrain(motor_direito, 0, 220);
  
   if (faixas<Faixas_Direita && tempo_atual>=tempo_calibracao){
-    analogWrite(6, motor_esquerdo); //Left Motor Speed
-    analogWrite(5, motor_direito); //Right Motor Speed
+    analogWrite(6, motor_esquerdo); // Velocidade do motor esquerdo
+    analogWrite(5, motor_direito); // Velocidade do motor direito
   } 
-  if (faixas == Faixas_Direita && contador == 0){
+  if (faixas == Faixas_Direita && aux == 0){
     tempo_final = tempo_atual + 500;
-    contador++;
+    aux++;
   }
-  if (tempo_atual >= tempo_final && contador > 0){
+  if (tempo_atual >= tempo_final && aux > 0){
     //Serial.println("PARADO");
-    analogWrite(6, 0); //Left Motor Speed
-    analogWrite(5, 0); //Right Motor Speed
+    analogWrite(6, 0); // Velocidade do motor esquerdo
+    analogWrite(5, 0); //Velocidade do motor direito
+  }
+  else { // Continua o controle do motor nesses 500 ms
+    analogWrite(6, motor_esquerdo); 
+    analogWrite(5, motor_direito); 
   }
 }
 
-void conta_faixas(){
+void conta_faixas(){ // função de contar faixas da direita
   if (past_sensor5 == 0 && sensor[5] == 1 && tempo_atual >= tempo_calibracao){
     faixas++;
   }
