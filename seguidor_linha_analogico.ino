@@ -99,19 +99,6 @@ void sensores(){ // função que "transforma" a leitura analogica em digital
     sensor[3] = (a[3]<media[3])? 1 : 0;
     sensor[4] = (a[4]<media[4])? 1 : 0;
     sensor[5] = (a[5]<media[5])? 1 : 0;
-   
-// Se quiser imprimir na tela a leitura dos sensores
-/*Serial.print(sensor[0]);
-Serial.print("\t");
-Serial.print(sensor[1]);
-Serial.print("\t");
-Serial.print(sensor[2]);
-Serial.print("\t");
-Serial.print(sensor[3]);
-Serial.print("\t");
-Serial.print(sensor[4]);
-Serial.print("\t");
-Serial.println(sensor[5]);*/
   
   if ((sensor[0] == 0) && (sensor[1] == 0) && (sensor[2] == 0) && (sensor[3] == 0) && (sensor[4] == 1))
     erro = 4;
