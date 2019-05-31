@@ -42,21 +42,7 @@ void read_sensor_values(); // função de leitura dos sensores
   sensor[4] = digitalRead(A1);
   sensor[5] = digitalRead(A0); //sensor direita   
 
-// Se quiser verificar a leitura dos sensores
-/*Serial.print(sensor[0]);
-Serial.print("\t");
-Serial.print(sensor[1]);
-Serial.print("\t");
-Serial.print(sensor[2]);
-Serial.print("\t");
-Serial.print(sensor[3]);
-Serial.print("\t");
-Serial.print(sensor[4]);
-Serial.print("\t");
-Serial.println(sensor[5]);*/
-
-
-  
+ 
   if ((sensor[0] == 0) && (sensor[1] == 0) && (sensor[2] == 0) && (sensor[3] == 0) && (sensor[4] == 1))
     error = 4;
   else if ((sensor[0] == 0) && (sensor[1] == 0) && (sensor[2] == 0) && (sensor[3] == 1) && (sensor[4] == 1))
@@ -93,15 +79,13 @@ void calculate_pid()
   previous_error = error;
 }
 
-void motor_control()
+void motor_control() // Calculando a velocidade dos motores
 {
-  // Calculating the effective motor speed:
   int left_motor_speed = initial_motor_speed - PID_value;
   int right_motor_speed = initial_motor_speed + PID_value;
 
-  // The motor speed should not exceed the max PWM value
-  left_motor_speed = constrain(left_motor_speed, 0, 220);
-  right_motor_speed = constrain(right_motor_speed, 0, 220);
+  left_motor_speed = constrain(left_motor_speed, 0, 255);
+  right_motor_speed = constrain(right_motor_speed, 0, 255);
   
   if (faixas<Faixas_Direita && tempo_atual>=tempo_calib)
   {
@@ -116,7 +100,6 @@ void motor_control()
     }
     if (tempo_atual>=tempo_final && contador>0)
     {
-      Serial.println("PARADO");
       analogWrite(6, 0); //Left Motor Speed
       analogWrite(5, 0); //Right Motor Speed
     }
